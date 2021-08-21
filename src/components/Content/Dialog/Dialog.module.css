@@ -1,0 +1,45 @@
+.newMessage{
+	width: 80%;
+	margin: auto;
+	margin-top: 20px;
+}
+
+.newMessage textarea{
+	width: 100%;
+}
+
+.sendMessage{
+	width: 80%;
+	margin: auto;
+}
+
+.sendMessage button{
+	width: 100px;
+	position: relative;
+	left: calc(100% - 100px);
+}
+
+.message,.me_message{
+	display: flex;
+	width: 80%;
+	margin:auto;
+}
+
+.me_message{
+	flex-direction: row-reverse;
+}
+
+.img_user{
+	width: 50px;
+	height: 50px;
+}
+
+.img_user img{
+	width: 100%;
+	height: 100%;
+}
+
+.text_message{
+	margin:0 20px;
+	align-self: center;
+}

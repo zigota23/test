@@ -1,0 +1,29 @@
+.app{
+	width: 100%;
+	max-width: 1920px;
+	margin:auto;
+}
+.header{
+	width: 100%;
+	height: 10vh;
+
+	background-color: blue;
+	margin-bottom: 0.5%;
+}
+.navcontent{
+	display: flex;
+	
+}
+
+.navbar{
+	width: 20%;
+	background: linear-gradient(45deg,white 0%,#FADD00 50%,80%,#5D0FA9 100%);
+	margin-right: 0.5%;
+	height: 100vh;
+	padding-top: 0.5%;
+}
+
+.content{
+	width: 80%;
+	background: pink;
+}

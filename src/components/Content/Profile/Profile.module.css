@@ -1,0 +1,41 @@
+.user_info{
+	display: flex;
+	width: 100%;
+ 	margin-bottom: 7vw;
+}
+
+.user_photo{
+	width:20%;
+}
+
+.user_photo img{
+	width: 100%;
+	margin-top:2vw;
+	margin-left:5vw;
+
+}
+
+.about_user{
+	position: relative;
+	left: 30%;
+	padding-top: 4%;
+	font-size: 1.3vw;
+}
+.text_new_post{
+	margin:auto;
+	width: 70%;
+}
+
+.text_new_post textarea{
+	width: 100%;
+	height: 5vw;
+	font-size: 1vw;
+}
+.send_post{
+	width: 7vw;
+	height: 1.5vw;
+	font-size: 0.9vw;
+	position: relative;
+	left:76%;
+	margin-top: 2vw;
+}
