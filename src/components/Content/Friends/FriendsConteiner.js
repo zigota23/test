@@ -1,23 +1,45 @@
 import React from 'react';
 import Friends from './Friends.js';
 import {connect} from 'react-redux';
-import {follow,unfollow,getUsers,changeFetching} from './../../../redux/friends-reducer.js';
+import {follow,unfollow,getUsers,changeFetching,getFriends,changeTerm,changeOnlyFriends} from './../../../redux/friends-reducer.js';
 import {compose} from 'redux';
 
 
 class FrindsConteiner extends React.Component{
 
 	componentDidMount(){
-		this.props.getUsers(this.props.count,this.props.page);
+		if(this.props.onlyFriends)this.props.getFriends(this.props.term);
+		else{this.props.getUsers(this.props.count,this.props.page,this.props.term)}
+	}
+	
+	componentDidUpdate(prevProps,prevState){
+		if(prevProps.onlyFriends !== this.props.onlyFriends){
+			if(this.props.onlyFriends)this.props.getFriends(this.props.term);
+			else{this.props.getUsers(this.props.count,this.props.page,this.props.term)}
+		}
 	}
 
 	onPageChanged = (page)=>{
-		this.props.getUsers(this.props.count,page); 
+		if(this.props.onlyFriends)this.props.getFriends(this.props.term);
+		else{this.props.getUsers(this.props.count,page,this.props.term)}
+	}
+
+	onChangeSearch = (e)=>{
+		this.props.changeTerm(e.target.value);
 	}
 
 	followUnfollow = (userId,status)=>{
-		status?this.props.unfollow(userId,this.props.count,this.props.page):
-			   this.props.follow(userId,this.props.count,this.props.page);	
+		status?this.props.unfollow(userId,this.props.count,this.props.page,this.props.term):
+			   this.props.follow(userId,this.props.count,this.props.page,this.props.term);	
+	}
+
+	changeOnlyFriends = (e)=>{
+		this.props.changeOnlyFriends(e.target.checked)
+	}
+
+	OnClickSearch = ()=>{
+		if(this.props.onlyFriends)this.props.getFriends(this.props.term);
+		else{this.props.getUsers(this.props.count,this.props.page,this.props.term)}
 	}
 
 	componentWillUnmount(){
@@ -26,7 +48,8 @@ class FrindsConteiner extends React.Component{
 
 	render(){
 		return(
-			<Friends {...this.props} onPageChanged={this.onPageChanged} followUnfollow={this.followUnfollow}/>
+			<Friends {...this.props} onPageChanged={this.onPageChanged} followUnfollow={this.followUnfollow} 
+			onChangeSearch={this.onChangeSearch} changeOnlyFriends={this.changeOnlyFriends} OnClickSearch={this.OnClickSearch}/>
 		)
 	} 
 }
@@ -38,7 +61,9 @@ const mapStateToProps = (state)=>{
 		page:state.friendsReducer.page,
 		users:state.friendsReducer.users,
 		pages:state.friendsReducer.pages,
+		term:state.friendsReducer.term,
 		isFetching:state.friendsReducer.isFetching,
+		onlyFriends:state.friendsReducer.onlyFriends,
 	}
 }
 
@@ -46,4 +71,4 @@ const mapStateToProps = (state)=>{
 
 
 
-export default compose(connect(mapStateToProps,{follow,unfollow,getUsers,changeFetching}))(FrindsConteiner)
+export default compose(connect(mapStateToProps,{follow,unfollow,getUsers,changeFetching,getFriends,changeTerm,changeOnlyFriends}))(FrindsConteiner)

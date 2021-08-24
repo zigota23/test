@@ -13,9 +13,16 @@ const Friends = (props)=>{
 
 	return(
 		<div className={style.frinds}>
-			<div className={style.pages}>{props.pages.map((item,index)=>{return(item === '...'?<span>{item} </span>:
-						<span onClick={()=>{props.onPageChanged(item)}}>{item==props.page?<strong>{item}</strong>:item} </span>)})}</div>
+			<div className={style.friends_list}>
+			{!props.onlyFriends&&<div className={style.pages}>{props.pages.map((item,index)=>{return(item === '...'?<span>{item} </span>:
+						<span onClick={()=>{props.onPageChanged(item)}}>{item==props.page?<strong>{item}</strong>:item} </span>)})}</div>}
 			{users}
+			</div>
+			<div className={style.friends_menu}>
+				<div className={style.search_friend}><input placeholder="search" value={props.term} onChange={props.onChangeSearch}/></div>	
+				<button onClick={props.OnClickSearch}>Search</button>
+				<div className={style.check_box_friends}><input type='checkbox' onClick={props.changeOnlyFriends}/>Only friends</div>
+			</div>
 		</div>
 	)
 }
