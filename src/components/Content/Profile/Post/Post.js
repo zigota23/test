@@ -1,5 +1,7 @@
 import React from 'react';
 import style from './Post.module.css';
+import {connect} from 'react-redux';
+import {likePost} from './../../../../redux/profile-reducer.js';
 
 
 const Post = (props)=>{
@@ -24,4 +26,8 @@ const Post = (props)=>{
 	)
 }
 
-export default Post;
+const mapStateToProps = (state)=>{
+	return{}
+}
+
+export default connect(mapStateToProps,{likePost})(Post);

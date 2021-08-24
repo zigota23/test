@@ -6,6 +6,7 @@ const ADD_NEW_POST = 'zigota/profile/ADD_NEW_POST';
 const LIKE_POST = 'zigota/profile/LIKE_POST';
 const SET_PROFILE = 'zigota/profile/SET_PROFILE';
 const SET_STATUS = 'zigota/profile/SET_STATUS';
+const SET_IS_FETCHING = 'zigota/profile/SET_IS_FETCHING';
 
 const initialState = {
 	user:{
@@ -13,7 +14,8 @@ const initialState = {
 		about_user:null,
 		photo:null,
  	},
-	posts:[]
+	posts:[],
+	isFetching:false
 }
 
 
@@ -50,6 +52,13 @@ const profileReducer = (state = initialState,action)=>{
 				user:{...state.user,about_user:action.status}
 			}
 		}
+
+		case SET_IS_FETCHING:{
+			return{
+				...state,
+				isFetching:action.status
+			}
+		}
 		default: return state
 	}
 }
@@ -71,11 +80,16 @@ const setStatus = (status)=>{
 	return{type:SET_STATUS,status}
 }
 
+export const changeFetching = (status)=>{
+	return{type:SET_IS_FETCHING,status}
+} 
+
 export const getProfile = (userId)=> async (dispatch)=>{
 	const data = await ProfileAPI.getProfile(userId);
 	console.log(data);
 	dispatch(setProfile(data));
 	dispatch(getStstus(userId));
+	dispatch(changeFetching(true));
 }
 
 const getStstus = (userId)=> async (dispatch)=>{

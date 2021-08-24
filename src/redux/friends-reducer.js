@@ -4,6 +4,7 @@ const SET_USERS = 'zigota/friends/SET_USERS';
 const SET_TOTAL_COUNT ='zigota/friends/SET_TOTAL_COUNT';
 const SET_PAGE = 'zigota/friends/SET_PAGE';
 const SET_PAGES = 'zigota/friends/SET_PAGES';
+const SET_IS_FETCHING = 'zigota/profile/SET_IS_FETCHING';
 
 const initialState = {
 	users:[],
@@ -11,6 +12,7 @@ const initialState = {
 	totalCount:null,
 	count:20,
 	page:1,
+	isFetching:false,
 }
 
 const friendsReducer = (state = initialState , action)=>{
@@ -53,6 +55,12 @@ const friendsReducer = (state = initialState , action)=>{
 			}
 		}
 
+		case SET_IS_FETCHING:{
+			return{
+				...state,
+				isFetching:action.status,
+			}
+		}
 		default: return state;
 	}
 }
@@ -72,12 +80,17 @@ const friendsReducer = (state = initialState , action)=>{
 	return{type:SET_PAGES,page}
 }
 
+export const changeFetching = (status)=>{
+	return{type:SET_IS_FETCHING,status}
+}
+
 export const getUsers = (count,page)=> async (dispath)=>{
 	const data = await UsersAPI.getUsers(count,page);
 	dispath(setUsers(data.items));
 	dispath(setTotalCount(data.totalCount));
 	dispath(setPage(page));
 	dispath(setPages(page));
+	dispath(changeFetching(true));
 }
 
 export const follow = (userId,count,page)=>(dispath)=>{

@@ -1,5 +1,6 @@
 import style from './Friends.module.css';
 import Friend from './Friend/Friend.js';
+import Preloader from './../../../hoc/Preloader/Preloader.js';
 
 
 const Friends = (props)=>{
@@ -7,6 +8,8 @@ const Friends = (props)=>{
 		return<Friend name={props.users[index].name} followed={props.users[index].followed}
 		 userId={props.users[index].id} followUnfollow={props.followUnfollow} photo={props.users[index].photos.small}/>
 	})
+
+	if(!props.isFetching)return <Preloader/>
 
 	return(
 		<div className={style.frinds}>

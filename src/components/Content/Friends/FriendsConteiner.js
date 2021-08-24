@@ -1,7 +1,7 @@
 import React from 'react';
 import Friends from './Friends.js';
 import {connect} from 'react-redux';
-import {follow,unfollow,getUsers} from './../../../redux/friends-reducer.js';
+import {follow,unfollow,getUsers,changeFetching} from './../../../redux/friends-reducer.js';
 import {compose} from 'redux';
 
 
@@ -20,6 +20,10 @@ class FrindsConteiner extends React.Component{
 			   this.props.follow(userId,this.props.count,this.props.page);	
 	}
 
+	componentWillUnmount(){
+		this.props.changeFetching(false)
+	}
+
 	render(){
 		return(
 			<Friends {...this.props} onPageChanged={this.onPageChanged} followUnfollow={this.followUnfollow}/>
@@ -34,7 +38,7 @@ const mapStateToProps = (state)=>{
 		page:state.friendsReducer.page,
 		users:state.friendsReducer.users,
 		pages:state.friendsReducer.pages,
-
+		isFetching:state.friendsReducer.isFetching,
 	}
 }
 
@@ -42,4 +46,4 @@ const mapStateToProps = (state)=>{
 
 
 
-export default compose(connect(mapStateToProps,{follow,unfollow,getUsers}))(FrindsConteiner)
+export default compose(connect(mapStateToProps,{follow,unfollow,getUsers,changeFetching}))(FrindsConteiner)

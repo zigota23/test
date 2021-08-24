@@ -4,10 +4,10 @@ import {Field,reduxForm} from 'redux-form';
 import {withRouter,Redirect} from 'react-router-dom';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
-
-import PostConteiner from './Post/PostConteiner.js';
-import {addNewPost,getProfile,updateStatus} from './../../../redux/profile-reducer.js';
+import Post from './Post/Post.js';
+import {addNewPost,getProfile,updateStatus,changeFetching} from './../../../redux/profile-reducer.js';
 import {withAuthRedirect} from './../../../hoc/withAuthRedirect.js';
+import Preloader from './../../../hoc/Preloader/Preloader.js';
 
 
 const PostForm = (props)=>{
@@ -31,13 +31,17 @@ const Profile = (props)=>{
 	let [editMode,setEditMode]=useState(false);
 	let [status,setStatus]=useState(props.about_user);
 
-	useEffect(()=>{props.getProfile(props.match.params.userId)},[]);
+	useEffect(()=>{
+		props.getProfile(props.match.params.userId);
+		return ()=>{props.changeFetching(false)}
+	},[]);
 	useEffect(()=>{props.getProfile(props.match.params.userId)},[props.match.params.userId]);
 	useEffect(()=>{setStatus(props.about_user)},[props.about_user]);
+	useEffect(()=>{},[props.isFetching])
 
 
 	let arrPosts = props.posts.map((el,index)=>{
-		return <PostConteiner name={el.user.name} photo={el.user.photo} like={el.like} text={el.post_text} id={index}/>
+		return <Post name={el.user.name} photo={el.user.photo} like={el.like} text={el.post_text} id={index}/>
 	})
 
 	const onSubmit = (data)=>{
@@ -56,6 +60,8 @@ const Profile = (props)=>{
 		props.updateStatus(e.target.value);
 		changeEditMode();
 	}
+
+	if(!props.isFetching)return <Preloader/>
 
 	return(
 		<div>
@@ -90,6 +96,7 @@ const mapStateToProps = (state)=>{
 		about_user:state.profileReducer.user.about_user,
 		photo_user:state.profileReducer.user.photo,
 		posts: state.profileReducer.posts,
+		isFetching:state.profileReducer.isFetching,
 	};
 }
 
@@ -97,5 +104,5 @@ const mapStateToProps = (state)=>{
 export default compose(
 	withAuthRedirect,
 	withRouter,
-	connect(mapStateToProps,{addNewPost,getProfile,updateStatus}),
+	connect(mapStateToProps,{addNewPost,getProfile,updateStatus,changeFetching}),
 	)(Profile);

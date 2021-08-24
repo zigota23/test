@@ -1,8 +1,18 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import style from './Dialog.module.css';
+import Preloader from './../../../hoc/Preloader/Preloader.js';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {withRouter} from 'react-router-dom';
+import {getDialog,changeFetching} from './../../../redux/dialog-reducer.js'
 
 
 const Dialog = (props)=>{
+
+	useEffect(()=>{
+		props.getDialog(props.match.params.userId,props.meId,props.dialog);
+		return ()=>{props.changeFetching(false)}
+	},[])
 
 	let dialog = props.dialog.map(item=>{
 		return(
@@ -13,6 +23,8 @@ const Dialog = (props)=>{
 			)
 	})
 
+	if(!props.isFetching)return <Preloader/>
+
 	return(
 		<div className={style.dialog}>
 			{dialog}
@@ -22,4 +34,17 @@ const Dialog = (props)=>{
 		)
 }
 
-export default Dialog;
+
+const mapStateToProps = (state)=>{
+	return{
+		dialog:state.dialogReducer.dialog,
+		meId:state.authReducer.userId,
+		isFetching:state.dialogReducer.isFetching,
+	}
+}
+
+
+export default compose(
+	withRouter,
+	connect(mapStateToProps,{getDialog,changeFetching})
+	)(Dialog);

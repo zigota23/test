@@ -1,7 +1,8 @@
 import {ProfileAPI} from './../API/api.js';
 import photo_default from './../img/user.png';
 
-const SET_INFO_MESSAGES = 'zigota/messages/SET_INFO_MESSAGES'
+const SET_INFO_MESSAGES = 'zigota/messages/SET_INFO_MESSAGES';
+const SET_IS_FETCHING = 'zigota/messages/SET_IS_FETCHING';
 
 const initailState = {
 	messages:[
@@ -10,7 +11,8 @@ const initailState = {
 	{userId:18005,userName:null,userPhoto:null,lastMessage:"Доброе утро =)"},
 	{userId:18004,userName:null,userPhoto:null,lastMessage:"Доброе утро =)"},
 	{userId:9,userName:null,userPhoto:null,lastMessage:"Доброе утро =)"},
-	]
+	],
+	isFetching:false,
 }
 
 
@@ -23,6 +25,13 @@ const messagesReducer = (state = initailState,action)=>{
 				messages:action.messages
 			}
 		}
+
+		case SET_IS_FETCHING:{
+			return{
+				...state,
+				isFetching:action.status
+			}
+		} 
 
 		default:{return state}
 	}
@@ -44,7 +53,12 @@ export const getUserMessages = (messages)=> async (dispath)=>{
 		newMessages.push(newItem);
 	}
 
-	dispath(setInfoMessages(newMessages))
+	dispath(setInfoMessages(newMessages));
+	dispath(changeFetching(true));
+}
+
+export const changeFetching =(status)=>{
+	return{type:SET_IS_FETCHING,status}
 }
 
 export default messagesReducer;

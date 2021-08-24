@@ -2,7 +2,9 @@ import {reduxForm,Field} from 'redux-form';
 import style from './Login.module.css';
 import {Input} from './../../Component/component.js';
 import {required} from './../../../validator/validator.js';
-import {Redirect} from 'react-router-dom'
+import {Redirect} from 'react-router-dom';
+import {login} from './../../../redux/auth-reducer.js';
+import {connect} from 'react-redux';
  
 const LoginForm = (props)=>{
 	return(
@@ -46,4 +48,12 @@ const Login = (props)=>{
 }
 
 
-export default Login;
+const mapSateToProps = (state)=>{
+
+	return {
+		isAuth:state.authReducer.isAuth,
+		userId:state.authReducer.userId			
+	}
+}
+
+export default connect(mapSateToProps,{login})(Login)

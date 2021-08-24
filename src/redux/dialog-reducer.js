@@ -2,6 +2,7 @@ import {ProfileAPI} from './../API/api.js';
 import photo_default from './../img/user.png';
 
 const SET_DIALOG = 'zigota/dialog/SET_DIALOG';
+const SET_IS_FETCHING = 'zigota/dialog/SET_IS_FETCHING';
 
 const initialState = {
 	dialog:[
@@ -13,7 +14,8 @@ const initialState = {
 	{message:"sfsdfds",userId:"18221",userPhoto:null},
 	{message:"Доброе утро =)",userId:null,userPhoto:null},
 
-	]
+	],
+	isFetching:false
 }
 
 
@@ -27,6 +29,13 @@ const dialogReducer = (state = initialState,action)=>{
 			}
 		}
 
+		case SET_IS_FETCHING:{
+			return{
+				...state,
+				isFetching:action.status
+			}
+		}
+
 		default:{return state}
 	}
 }
@@ -35,8 +44,11 @@ const setDialog = (dialog)=>{
 	return{type:SET_DIALOG,dialog}
 }
 
-export const getDialog = (userId,meId,dialog)=>async (dispath)=>{
+export const changeFetching = (status)=>{
+	return{type:SET_IS_FETCHING,status}
+}
 
+export const getDialog = (userId,meId,dialog)=>async (dispath)=>{	
 	let newDilog = dialog.map((item)=>{
 		let newId = item.userId
 		if(newId != meId) newId = userId
@@ -48,7 +60,8 @@ export const getDialog = (userId,meId,dialog)=>async (dispath)=>{
 		newDilog[i].userPhoto = data.photos.small||photo_default;
 	}
 
-	dispath(setDialog(newDilog)); 
+	dispath(setDialog(newDilog));
+	dispath(changeFetching(true)); 
 }
 
 export default dialogReducer;
