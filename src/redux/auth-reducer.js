@@ -1,6 +1,7 @@
 import {AuthAPI,ProfileAPI} from './../API/api.js';
 import {stopSubmit} from 'redux-form';
 
+
 const SET_AUTH_INFO = 'zigota/auth/SET_AUTH_INFO';
 
 const initialState = {
@@ -62,6 +63,7 @@ export const logout = ()=>(dispatch)=>{
 	AuthAPI.logout();
 	dispatch(setAuthInfo({userId:null,email:null,login:null,isAuth:false}));
 }
+
 
 
 export default authReducer;

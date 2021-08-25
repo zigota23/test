@@ -1,26 +1,28 @@
 import React,{useState,useEffect} from 'react';
 import style from './Profile.module.css';
-import {Field,reduxForm} from 'redux-form';
+import {Field,reduxForm,reset} from 'redux-form';
 import {withRouter,Redirect} from 'react-router-dom';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
 import Post from './Post/Post.js';
-import {addNewPost,getProfile,updateStatus,changeFetching} from './../../../redux/profile-reducer.js';
+import {addNewPost,getProfile,updateStatus,changeFetching,changePhoto} from './../../../redux/profile-reducer.js';
 import {withAuthRedirect} from './../../../hoc/withAuthRedirect.js';
 import Preloader from './../../../hoc/Preloader/Preloader.js';
 
+
+const afterSubmit = (result, dispatch) => dispatch(reset('post'));
 
 const PostForm = (props)=>{
 	return(
 		<form onSubmit={props.handleSubmit}>
 			<div className={style.text_new_post}>
-				<Field name='post' component='textarea'/>
+				<Field name='post' className={style.post_field} component='textarea'/>
 			</div>
 			<button type='submit' className={style.send_post}>Отправить</button>
 		</form>
 		)
 }
-const PostFormRedux = reduxForm({form:'post'})(PostForm);
+const PostFormRedux = reduxForm({form:'post',onSubmitSuccess:afterSubmit})(PostForm);
 
 
 
@@ -45,6 +47,7 @@ const Profile = (props)=>{
 	})
 
 	const onSubmit = (data)=>{
+		debugger
 		props.addNewPost(data.post)
 	}
 
@@ -61,6 +64,17 @@ const Profile = (props)=>{
 		changeEditMode();
 	}
 
+	const recieveNewPhoto = (e)=>{
+		console.log(e.target.files[0].type.indexOf('image'))
+		if(e.target.files[0].type.indexOf('image') !== -1)props.changePhoto(e.target.files[0]);
+		else{alert("Добавте коректный тип файла")}
+	}
+
+	const isStyleNone = (className)=>{
+		if(props.match.params.userId == props.meId)return className
+		 return style.none
+	}
+
 	if(!props.isFetching)return <Preloader/>
 
 	return(
@@ -68,6 +82,10 @@ const Profile = (props)=>{
 			<div className={style.user_info}>
 				<div className={style.user_photo}>
 					<img src={props.photo_user}/>
+					<div className={style.new_photo_load}>
+						<label htmlFor={style.load_photo} className={isStyleNone(style.label_load_photo)}>Редактировать фото</label>
+						<input multiple={false} type='file' id={style.load_photo} className={style.load_photo} onChange={recieveNewPhoto}></input>
+					</div>
 				</div>
 				<div className={style.about_user}>
 					<div className={style.user_name}>{props.name}</div>
@@ -77,11 +95,11 @@ const Profile = (props)=>{
 					</div>
 				</div>
 			</div>
-			<div className={style.new_post}>
+			<div className={isStyleNone(style.new_post)}>
 				<PostFormRedux onSubmit={onSubmit}/>
 			</div>
 
-			<div>{arrPosts}</div>
+			<div className={isStyleNone(style.posts)}>{arrPosts}</div>
 
 		</div>
 		);
@@ -97,6 +115,7 @@ const mapStateToProps = (state)=>{
 		photo_user:state.profileReducer.user.photo,
 		posts: state.profileReducer.posts,
 		isFetching:state.profileReducer.isFetching,
+		meId:state.authReducer.userId,
 	};
 }
 
@@ -104,5 +123,5 @@ const mapStateToProps = (state)=>{
 export default compose(
 	withAuthRedirect,
 	withRouter,
-	connect(mapStateToProps,{addNewPost,getProfile,updateStatus,changeFetching}),
+	connect(mapStateToProps,{addNewPost,getProfile,updateStatus,changeFetching,changePhoto}),
 	)(Profile);

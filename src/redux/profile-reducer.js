@@ -7,6 +7,7 @@ const LIKE_POST = 'zigota/profile/LIKE_POST';
 const SET_PROFILE = 'zigota/profile/SET_PROFILE';
 const SET_STATUS = 'zigota/profile/SET_STATUS';
 const SET_IS_FETCHING = 'zigota/profile/SET_IS_FETCHING';
+const SET_PHOTO = 'zigota/profile/SET_PHOTO';
 
 const initialState = {
 	user:{
@@ -59,6 +60,16 @@ const profileReducer = (state = initialState,action)=>{
 				isFetching:action.status
 			}
 		}
+
+		case SET_PHOTO:{
+			return{
+				...state,
+				user:{
+					...state.user,
+					photo:action.photo
+				}
+			}
+		}
 		default: return state
 	}
 }
@@ -86,13 +97,12 @@ export const changeFetching = (status)=>{
 
 export const getProfile = (userId)=> async (dispatch)=>{
 	const data = await ProfileAPI.getProfile(userId);
-	console.log(data);
 	dispatch(setProfile(data));
-	dispatch(getStstus(userId));
+	dispatch(getStatus(userId));
 	dispatch(changeFetching(true));
 }
 
-const getStstus = (userId)=> async (dispatch)=>{
+const getStatus = (userId)=> async (dispatch)=>{
 	const data = await ProfileAPI.getStatus(userId);
 	dispatch(setStatus(data));
 }
@@ -100,6 +110,19 @@ const getStstus = (userId)=> async (dispatch)=>{
 export const updateStatus = (status)=>(dispatch)=>{
 	dispatch(setStatus(status));
 	ProfileAPI.setStatus(status);
+}
+
+export const changePhoto = (file)=> async (dispatch)=>{
+	dispatch(changeFetching(false));
+	let formData = new FormData();
+	formData.append('file',file);
+	const data = await ProfileAPI.changeUserPhoto(formData);
+	dispatch(setPhoto(data.data.photos.small));
+	dispatch(changeFetching(true));
+}
+
+const setPhoto = (photo)=>{
+	return{type:SET_PHOTO,photo}
 }
 
 

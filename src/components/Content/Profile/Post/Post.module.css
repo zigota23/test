@@ -26,6 +26,8 @@
 .post{
 	margin-top: 1vw;
 	font-size: 1.3vw;
+	max-width: 100%;
+	word-wrap: break-word;
 }
 
 .like{

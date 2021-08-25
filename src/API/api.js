@@ -22,18 +22,22 @@ export const UsersAPI ={
 
 
 export const ProfileAPI = {
-
 	getProfile:(userId)=>instance.get('profile/'+userId).then(response=>response.data),
+
 	getStatus:(userId)=>instance.get('profile/status/'+userId).then(response=>response.data),
+
 	setStatus:(status)=>{instance.put('profile/status',{status})},
+
+	changeUserPhoto:(file)=>instance.post('profile/photo',file).then(response=>response.data),
 
 }
 
 
 export const AuthAPI = {
-
 	authMe:()=>instance.get('auth/me').then(response=>response.data),
+
 	login:(email,password,rememberMe)=>instance.post('auth/login',{email,password,rememberMe}).then(response=>(response.data)),
+	
 	logout:()=>instance.delete('auth/login'),
 
 }

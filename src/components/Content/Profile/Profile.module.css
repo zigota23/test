@@ -27,8 +27,10 @@
 }
 
 .text_new_post textarea{
+	resize:none;
 	width: 100%;
 	height: 5vw;
+	overflow-y: scroll;
 	font-size: 1vw;
 }
 .send_post{
@@ -38,4 +40,24 @@
 	position: relative;
 	left:76%;
 	margin-top: 2vw;
+}
+
+.load_photo{
+	display: none;
+}
+
+.label_load_photo{
+	border:2px solid black;
+	padding: 5px 10px;
+	position: relative;
+	left: 5vw;
+	cursor: pointer;
+}
+
+.none{
+	display: none
+}
+
+.new_photo_load{
+	margin-top: 20px;
 }
